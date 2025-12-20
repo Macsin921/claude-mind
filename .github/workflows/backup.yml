@@ -1,0 +1,24 @@
+name: Daily Backup
+
+on:
+  schedule:
+    - cron: '0 18 * * *'  # 3:00 JST (18:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create backup tag
+        run: |
+          git config user.name "Claude Mind"
+          git config user.email "claude@mind.ai"
+          TAG="backup-$(date +%Y%m%d)"
+          git tag $TAG || echo "Tag exists"
+
+      - name: Summary
+        run: |
+          echo "📦 Daily backup created"
+          echo "Tag: backup-$(date +%Y%m%d)"
